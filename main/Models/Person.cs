@@ -1,7 +1,13 @@
-﻿namespace main.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace main.Models
 {
+    [Table("person")]
     public class Person
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
         public string FirstName { get; set; }

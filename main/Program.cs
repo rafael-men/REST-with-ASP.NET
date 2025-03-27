@@ -1,8 +1,13 @@
+using System;
+using main.Data;
 using main.Services;
 using main.Services.Implementations;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddDbContext<PostgreSqlContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresqlConnection"))
+);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
