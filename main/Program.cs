@@ -1,8 +1,10 @@
 using System;
 using main.Data;
-using main.Services;
-using main.Services.Implementations;
+using main.Business;
+using main.Business.Implementations;
 using Microsoft.EntityFrameworkCore;
+using main.Repository;
+using main.Repository.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<PostgreSqlContext>(options =>
@@ -20,7 +22,8 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Backend de um sistema de gerenciamento de recursos com c#."
     });
 });
-builder.Services.AddScoped<IPersonService, PersonServiceImpl>();
+builder.Services.AddScoped<IPersonBusiness, PersonBusinessImpl>();
+builder.Services.AddScoped<IPersonRepository,PersonRepositoryImpl>();
 var app = builder.Build();
 
 

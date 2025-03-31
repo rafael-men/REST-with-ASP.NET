@@ -1,13 +1,15 @@
 ﻿using main.Models;
 
-namespace main.Services
+namespace main.Repository
 {
-    public interface IPersonService
+    public interface IPersonRepository
     {
         Person createPerson(Person person);
         Person findById(long id);
         List<Person> findAll();
         Person updatePerson(Person person);
         void deletePerson(long id);
+
+        bool Exists (long id);
     }
 }

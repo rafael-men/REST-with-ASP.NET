@@ -1,15 +1,16 @@
 ﻿using System;
 using main.Data;
 using main.Models;
+using main.Repository;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
-namespace main.Services.Implementations
+namespace main.Repository.Implementations
 {
-    public class PersonServiceImpl : IPersonService
+    public class PersonRepositoryImpl : IPersonRepository
     {
         private PostgreSqlContext _context;
 
-        public PersonServiceImpl(PostgreSqlContext context)
+        public PersonRepositoryImpl(PostgreSqlContext context)
         {
             _context = context;
         }
@@ -78,7 +79,7 @@ namespace main.Services.Implementations
             return person;
         }
 
-        private bool Exists(long id)
+        public bool Exists(long id)
         {
             return _context.Persons.Any(p => p.Id.Equals(id));
         }
