@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS books 
+(
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    price NUMERIC(10, 2) NOT NULL,
+    launch_date TIMESTAMP WITHOUT TIME ZONE NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS person (
+    id BIGSERIAL PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    address TEXT NOT NULL,
+    gender VARCHAR(20) NOT NULL
+);

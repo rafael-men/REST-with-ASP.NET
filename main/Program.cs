@@ -5,11 +5,29 @@ using main.Business.Implementations;
 using Microsoft.EntityFrameworkCore;
 using main.Repository;
 using main.Repository.Implementations;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Evolve; 
+using Npgsql;
+using Serilog;
+using Microsoft.Extensions.Configuration; 
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+var connection = builder.Configuration.GetConnectionString("PostgresqlConnection");
 builder.Services.AddDbContext<PostgreSqlContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresqlConnection"))
+    options.UseNpgsql(connection)
 );
+
+builder.Services.AddSingleton<Serilog.ILogger>(Log.Logger);
+var evolveLogger = Log.ForContext("SourceContext", "Evolve");
+
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -23,9 +41,18 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImpl>();
-builder.Services.AddScoped<IPersonRepository,PersonRepositoryImpl>();
+builder.Services.AddScoped<IBookBusiness, BookBusinessImpl>();
+builder.Services.AddScoped<IPersonRepository, PersonRepositoryImpl>();
+builder.Services.AddScoped<IBooksRepository, BooksRepositoryImpl>();
 var app = builder.Build();
 
+
+using (var scope = app.Services.CreateScope())
+{
+    var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+    var logger = scope.ServiceProvider.GetRequiredService<Serilog.ILogger>();
+    DatabaseMigration.MigrateDatabase(configuration, logger.ForContext("SourceContext", "Evolve"));
+}
 
 
 if (app.Environment.IsDevelopment())
@@ -40,3 +67,39 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 app.Run();
 
+
+public static class DatabaseMigration
+{
+    public static void MigrateDatabase(IConfiguration configuration, Serilog.ILogger logger)
+    {
+        try
+        {
+            logger.Information("Iniciando as migrações de banco de dados com Evolve.");
+            var connectionString = configuration.GetConnectionString("PostgresqlConnection");
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                logger.Error("A string de conexão 'PostgresqlConnection' não foi configurada.");
+                return;
+            }
+
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                var evolve = new Evolve.Evolve(connection, message => logger.Information(message))
+                {
+                    Locations = new[] { "db/migrations" }, 
+                    IsEraseDisabled = true,
+                };
+
+                evolve.Migrate();
+
+                logger.Information("Migrações de banco de dados concluídas com sucesso.");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "Ocorreu um erro durante as migrações de banco de dados.");
+            throw;
+        }
+    }
+}

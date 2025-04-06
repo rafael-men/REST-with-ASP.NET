@@ -9,6 +9,7 @@ namespace main.Data
         public PostgreSqlContext(DbContextOptions<PostgreSqlContext> options) : base(options) { }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Book> Books { get; set; }
 
     }
 }
