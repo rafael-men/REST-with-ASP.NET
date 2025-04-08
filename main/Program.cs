@@ -43,7 +43,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImpl>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImpl>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryImpl>();
-builder.Services.AddScoped<IBooksRepository, BooksRepositoryImpl>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositoryImpl<>));
 var app = builder.Build();
 
 

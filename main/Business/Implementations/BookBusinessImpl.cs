@@ -5,21 +5,21 @@ namespace main.Business.Implementations
 {
     public class BookBusinessImpl : IBookBusiness
     {
-        private readonly IBooksRepository _repository;
+        private readonly IGenericRepository<Book> _repository;
 
-        public BookBusinessImpl(IBooksRepository booksRepository)
+        public BookBusinessImpl(IGenericRepository<Book> booksRepository)
         {
             _repository = booksRepository;
         }
 
         public Book createBook(Book book)
         {
-            return _repository.CreateBook(book);
+            return _repository.Create(book);
         }
 
         public void deleteBook(long id)
         {
-            _repository.DeleteBook(id);
+            _repository.Delete(id);
         }
 
         public List<Book> findAll()
@@ -34,7 +34,7 @@ namespace main.Business.Implementations
 
         public Book updateBook(Book book)
         {
-            return _repository.UpdateBook(book);
+            return _repository.Update(book);
         }
     }
 }
