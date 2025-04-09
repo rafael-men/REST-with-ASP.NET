@@ -2,6 +2,7 @@
 using main.Models;
 using Microsoft.AspNetCore.Mvc;
 using main.Business;
+using main.VO;
 
 namespace main.Controllers
 {
@@ -27,13 +28,13 @@ namespace main.Controllers
         }
 
         [HttpPost("new")]
-        public IActionResult createPerson(Person person)
+        public IActionResult createPerson(PersonVO person)
         {
             return Ok(_personBusiness.createPerson(person));
         }
 
         [HttpPut("update")]
-        public IActionResult UpdatePerson(Person person)
+        public IActionResult UpdatePerson(PersonVO person)
         {
             return Ok(_personBusiness.updatePerson(person));
         }

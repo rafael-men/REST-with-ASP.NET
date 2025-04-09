@@ -1,13 +1,14 @@
 ﻿using main.Models;
+using main.VO;
 
 namespace main.Business
 {
     public interface IPersonBusiness
     {
-        Person createPerson(Person person);
-        Person findById(long id);
-        List<Person> findAll();
-        Person updatePerson(Person person);
+        PersonVO createPerson(PersonVO person);
+        PersonVO findById(long id);
+        List<PersonVO> findAll();
+        PersonVO updatePerson(PersonVO person);
         void deletePerson(long id);
     }
 }
