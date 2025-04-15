@@ -39,5 +39,12 @@ namespace main.Controllers
         {
             return Ok(_bookBusiness.updateBook(book));
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBook(long id)
+        {
+            _bookBusiness.deleteBook(id);
+            return NoContent();
+        }
     }
 }

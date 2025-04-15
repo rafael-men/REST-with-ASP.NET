@@ -9,7 +9,9 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Evolve; 
 using Npgsql;
 using Serilog;
-using Microsoft.Extensions.Configuration; 
+using Microsoft.Extensions.Configuration;
+using main.Hypermedia.Filters;
+using main.Hypermedia.Enricher;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,9 @@ builder.Services.AddDbContext<PostgreSqlContext>(options =>
 builder.Services.AddSingleton<Serilog.ILogger>(Log.Logger);
 var evolveLogger = Log.ForContext("SourceContext", "Evolve");
 
+var filterOptions = new HypermediaFilterOptions();
+filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+builder.Services.AddSingleton(filterOptions);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -65,6 +70,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+app.MapControllerRoute("", "{controller=values}/{id?}");
 app.Run();
 
 
