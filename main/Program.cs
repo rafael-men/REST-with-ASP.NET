@@ -32,7 +32,10 @@ var evolveLogger = Log.ForContext("SourceContext", "Evolve");
 var filterOptions = new HypermediaFilterOptions();
 filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
 builder.Services.AddSingleton(filterOptions);
-
+builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
+{
+    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+}));
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -68,7 +71,8 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Gerenciamento");
     });
 }
-
+app.UseRouting();
+app.UseCors();
 app.MapControllers();
 app.MapControllerRoute("", "{controller=values}/{id?}");
 app.Run();
