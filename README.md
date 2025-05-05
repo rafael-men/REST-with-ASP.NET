@@ -17,6 +17,7 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
 - **ASP.NET Core 6**
 - **C#**
 - **Entity Framework Core**
+- **Docker**
 - **JWT Bearer Authentication**
 - **Swagger UI**
 - **PostgreSQL** 
@@ -26,13 +27,17 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
 ## 🛠️ Como Executar
 
 1. **Clonar o repositório:**
+   
    ```bash
    git clone https://github.com/seu-usuario/rest-api-aspnet.git
    ```
-2. **Iniciar os contêineres:**
+   
+3. **Iniciar os contêineres:**
+   
    ```bash
    docker-compose up
    ```
+   
 ## 🤝 Contribuição
 - Contribuições são bem-vindas! Para contribuir:
 
