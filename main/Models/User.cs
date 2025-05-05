@@ -14,10 +14,6 @@ namespace main.Models
         [Column("full_name")]
         public string FullName { get; set; }
         [Column("password")]
-        public string Password  { get; set; }
-        [Column("refresh_token")]
-        public string RefreshToken  { get; set; }
-        [Column("rf_expires")]
-        public DateTime RefreshTokenExpires { get; set; }
-    }
+        public string Password { get; set; }
+    } 
 }

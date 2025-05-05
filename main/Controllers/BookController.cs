@@ -1,5 +1,6 @@
 ﻿using main.Business;
 using main.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace main.Controllers
@@ -7,6 +8,7 @@ namespace main.Controllers
 
     [ApiController]
     [Route("v1/api/books")]
+    [Authorize]
     public class BookController : ControllerBase
     {
         private readonly IBookBusiness _bookBusiness;

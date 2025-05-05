@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using main.Business;
 using main.VO;
 using main.Hypermedia.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace main.Controllers
 {
     [ApiController]
     [Route("v1/api/persons")]
+    [Authorize]
     public class PersonController : ControllerBase
     {
         private readonly IPersonBusiness _personBusiness;

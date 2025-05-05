@@ -6,14 +6,22 @@ using Microsoft.EntityFrameworkCore;
 using main.Repository;
 using main.Repository.Implementations;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using Evolve; 
+using Evolve;
 using Npgsql;
 using Serilog;
 using Microsoft.Extensions.Configuration;
 using main.Hypermedia.Filters;
 using main.Hypermedia.Enricher;
+using main.Security;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
@@ -26,16 +34,54 @@ builder.Services.AddDbContext<PostgreSqlContext>(options =>
     options.UseNpgsql(connection)
 );
 
+
 builder.Services.AddSingleton<Serilog.ILogger>(Log.Logger);
-var evolveLogger = Log.ForContext("SourceContext", "Evolve");
+
 
 var filterOptions = new HypermediaFilterOptions();
 filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
 builder.Services.AddSingleton(filterOptions);
+
+
 builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
 {
     builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
 }));
+
+
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MY_BIG_SECRET_HERE")),
+        ValidateIssuer = true,
+        ValidIssuer = "Mine",
+        ValidateAudience = true,
+        ValidAudience = "Mine"
+    };
+});
+
+
+builder.Services.AddAuthorization(auth =>
+{
+    auth.AddPolicy("Bearer", policy =>
+    {
+        policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+              .RequireAuthenticatedUser();
+    });
+});
+
+
+
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
@@ -45,13 +91,44 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "API de Gerenciamento com .NET",
         Version = "v1",
-        Description = "Backend de um sistema de gerenciamento de recursos com c#."
+        Description = "Backend de um sistema de gerenciamento de recursos com C#."
+    });
+
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Insira o token JWT (apenas o token, sem o prefixo 'Bearer').",
+        BearerFormat = "JWT",
+    });
+
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
     });
 });
+
+
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImpl>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImpl>();
 builder.Services.AddScoped<IPersonRepository, PersonRepositoryImpl>();
+builder.Services.AddScoped<IUserRepository, UserRepositoryImpl>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositoryImpl<>));
+builder.Services.AddScoped<ILoginBusiness, LoginBusinessImpl>();
+builder.Services.AddScoped<ITokenService, TokenServiceImpl>();
+
+
 var app = builder.Build();
 
 
@@ -71,7 +148,10 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Gerenciamento");
     });
 }
+
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors();
 app.MapControllers();
 app.MapControllerRoute("", "{controller=values}/{id?}");
@@ -97,7 +177,7 @@ public static class DatabaseMigration
             {
                 var evolve = new Evolve.Evolve(connection, message => logger.Information(message))
                 {
-                    Locations = new[] { "db/migrations" }, 
+                    Locations = new[] { "db/migrations" },
                     IsEraseDisabled = true,
                 };
 
