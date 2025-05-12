@@ -37,8 +37,10 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
    ```bash
    docker-compose up
    ```
-   
+- A Aplicação iniciará em **http://localhost:5151**.
+  
 ## 🤝 Contribuição
+
 - Contribuições são bem-vindas! Para contribuir:
 
 - Faça um fork do projeto
