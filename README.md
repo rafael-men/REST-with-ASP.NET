@@ -10,6 +10,7 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
 - Validação de modelos
 - Documentação via Swagger/OpenAPI
 - Entity Framework Core para acesso ao banco de dados
+- Evolve para suporte a migrations.
 
 ---
 
@@ -17,6 +18,7 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
 - **ASP.NET Core 6**
 - **C#**
 - **Entity Framework Core**
+- **Evolve**
 - **Docker**
 - **JWT Bearer Authentication**
 - **Swagger UI**
