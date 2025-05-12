@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  main:
+    build:
+      context: ./main
+      dockerfile: Dockerfile
+    ports:
+      - "5151:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ConnectionStrings__PostgresqlConnection=Host=postgres;Database=apidb;Username=postgres;Password=senha
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./main/db/migrations:/app/db/migrations   
+
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: senha
+      POSTGRES_DB: apidb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
+    driver: local
