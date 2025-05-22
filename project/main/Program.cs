@@ -43,10 +43,15 @@ filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
 builder.Services.AddSingleton(filterOptions);
 
 
-builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
+builder.Services.AddCors(options =>
 {
-    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-}));
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 var key = Encoding.ASCII.GetBytes("MySuperSecureKeyThatHasAtLeast32Chars");
 
@@ -149,9 +154,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseRouting();
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors();
 app.MapControllers();
 app.MapControllerRoute("", "{controller=values}/{id?}");
 app.Run();
