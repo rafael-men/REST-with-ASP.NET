@@ -1,6 +1,6 @@
 # REST API com ASP.NET Core
 
-API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonstrando conceitos de CRUD (Create, Read, Update, Delete) e autenticação JWT.
+- API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonstrando conceitos de CRUD (Create, Read, Update, Delete) e autenticação JWT.
 
 ---
 
@@ -11,6 +11,7 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
 - Documentação via Swagger/OpenAPI
 - Entity Framework Core para acesso ao banco de dados
 - Evolve para suporte a migrations.
+- Front-End em TypeScript + Vite consumindo a api e fornecendo suporte a interface de usuário.
 
 ---
 
@@ -22,7 +23,9 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
 - **Docker**
 - **JWT Bearer Authentication**
 - **Swagger UI**
-- **PostgreSQL** 
+- **PostgreSQL**
+- **TypeScript**
+- Vite + TailwindCSS
 
 ---
 
@@ -40,13 +43,23 @@ API de gerenciamento simples desenvolvida com ASP.NET Core, C# e .NET 6, demonst
    docker-compose up
    ```
 - A Aplicação iniciará em **http://localhost:5151**.
+
+## Como Executar o Frontend
+
+```bash
+  cd frontend
+  cd books-frontend-main
+  npm i // instala as dependências
+  npm run dev
+```
+- A Aplicação iniciará em **http://localhost:8080**.
   
 ## 🤝 Contribuição
 
 - Contribuições são bem-vindas! Para contribuir:
 
-- Faça um fork do projeto
-- Crie uma branch (git checkout -b feature/nova-funcionalidade)
-- Commit suas mudanças (git commit -m 'Adicionar nova funcionalidade')
-- Push para a branch (git push origin feature/nova-funcionalidade)
-- Abra um Pull Request
+- Faça um fork do projeto.
+- Crie uma branch (git checkout -b feature/nova-funcionalidade).
+- Commit suas mudanças (git commit -m 'Adicionar nova funcionalidade').
+- Push para a branch (git push origin feature/nova-funcionalidade).
+- Abra um Pull Request.
