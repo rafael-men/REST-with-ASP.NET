@@ -143,15 +143,12 @@ using (var scope = app.Services.CreateScope())
     DatabaseMigration.MigrateDatabase(configuration, logger.ForContext("SourceContext", "Evolve"));
 }
 
-
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Gerenciamento");
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API de Gerenciamento");
+});
+
 
 app.UseRouting();
 app.UseCors("AllowAll");
