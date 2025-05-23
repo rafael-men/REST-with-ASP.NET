@@ -53,7 +53,7 @@ export default function AddBook() {
     try {
       const token = localStorage.getItem("authToken"); 
 
-      const response = await fetch("http://localhost:5151/v1/api/books/new", {
+      const response = await fetch("https://rest-with-asp-net.onrender.com/v1/api/books/new", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

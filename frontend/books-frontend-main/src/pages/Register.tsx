@@ -33,7 +33,7 @@ export default function Register() {
   const onSubmit = async (data: RegisterData) => {
     setIsSubmitting(true);
     try {
-      const response = await fetch("http://localhost:5151/v1/api/auth/register", {
+      const response = await fetch("https://rest-with-asp-net.onrender.com/v1/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import BookStats from "@/components/BookStats";
 import BookCard from "@/components/BookCard";
 import { Book } from "@/types/BookTypes";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,7 @@ export default function Index() {
     }
 
     try {
-      const response = await fetch("http://localhost:5151/v1/api/books", {
+      const response = await fetch("https://rest-with-asp-net.onrender.com/v1/api/books", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",

@@ -52,7 +52,7 @@ export default function BookDetail() {
           return;
         }
 
-        const response = await fetch(`http://localhost:5151/v1/api/books/${id}`, {
+        const response = await fetch(`https://rest-with-asp-net.onrender.com/v1/api/books/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export default function BookDetail() {
         return;
       }
 
-      const response = await fetch(`http://localhost:5151/v1/api/books/${id}`, {
+      const response = await fetch(`https://rest-with-asp-net.onrender.com/v1/api/books/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
