@@ -13,16 +13,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
+// ✅ Adicionado campos: image e description
 const bookSchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
   author: z.string().min(1, "Autor é obrigatório"),
   price: z.coerce.number().positive("O preço deve ser positivo"),
   launchDate: z.string().min(1, "Data de lançamento é obrigatória"),
+  image: z.string().url("URL da imagem inválida"),
+  description: z.string().min(10, "Descrição deve ter pelo menos 10 caracteres"),
 });
 
 type BookFormValues = z.infer<typeof bookSchema>;
@@ -39,50 +43,53 @@ export default function AddBook() {
       author: "",
       price: 0,
       launchDate: "",
+      image: "",
+      description: "",
     },
   });
 
   const onSubmit = async (data: BookFormValues) => {
-  setIsSubmitting(true);
-  try {
-    const token = localStorage.getItem("authToken"); 
+    setIsSubmitting(true);
+    try {
+      const token = localStorage.getItem("authToken"); 
 
-    const response = await fetch("http://localhost:5151/v1/api/books/new", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`, 
-      },
-      body: JSON.stringify({
-        id: 0,
-        title: data.title,
-        author: data.author,
-        price: data.price,
-        launchDate: new Date(data.launchDate).toISOString(),
-      }),
-    });
+      const response = await fetch("http://localhost:5151/v1/api/books/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, 
+        },
+        body: JSON.stringify({
+          id: 0,
+          title: data.title,
+          author: data.author,
+          price: data.price,
+          launchDate: new Date(data.launchDate).toISOString(),
+          image: data.image,
+          description: data.description,
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Erro ao salvar livro");
+      if (!response.ok) {
+        throw new Error("Erro ao salvar livro");
+      }
+
+      toast({
+        title: "Livro criado",
+        description: "O livro foi salvo com sucesso!",
+      });
+
+      navigate("/main");
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível salvar o livro",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-
-    toast({
-      title: "Livro criado",
-      description: "O livro foi salvo com sucesso!",
-    });
-
-    navigate("/main");
-  } catch (error) {
-    toast({
-      title: "Erro",
-      description: "Não foi possível salvar o livro",
-      variant: "destructive",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -155,6 +162,41 @@ export default function AddBook() {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL da Imagem da Capa</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Cole aqui a URL da imagem da capa" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descrição</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Digite uma breve descrição sobre o livro"
+                        rows={4}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <div className="flex justify-end space-x-4">
                 <Button 

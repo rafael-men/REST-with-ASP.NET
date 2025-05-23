@@ -60,7 +60,7 @@ export default function Index() {
 
   const recentBooks = [...books]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 3);
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -89,7 +89,7 @@ export default function Index() {
               <h2 className="text-2xl font-semibold text-gray-800">Livros Cadastrados</h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1  lg:grid-cols-3 gap-6">
               {recentBooks.map((book) => (
                 <BookCard key={book.id} book={book} />
               ))}

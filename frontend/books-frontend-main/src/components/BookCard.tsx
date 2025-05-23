@@ -18,7 +18,7 @@ export default function BookCard({ book }: BookCardProps) {
       <Card className="h-full book-card hover:border-primary/50">
         <div className="aspect-[2/3] relative overflow-hidden rounded-t-lg">
           <img 
-            src={book.coverUrl || defaultCover} 
+            src={book.image || defaultCover} 
             alt={`Capa de ${book.title}`}
             className="w-full h-full object-cover transition-transform duration-200 hover:scale-105"
           />

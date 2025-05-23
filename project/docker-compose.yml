@@ -10,30 +10,29 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:8080
-      - ConnectionStrings__PostgresqlConnection=Host=postgres;Database=apidb;Username=postgres;Password=senha
-    depends_on:
-      postgres:
-        condition: service_healthy
+      # banco do Render
+      - ConnectionStrings__PostgresqlConnection=Host=dpg-d0o909qli9vc73fqgg50-a.oregon-postgres.render.com;Database=apidb_l2qp;Username=apidb_l2qp_user;Password=RQAy5dghiCNmY8zCOFJHjK2LcCXOlnHP
     volumes:
       - ./main/db/migrations:/app/db/migrations   
 
-  postgres:
-    image: postgres:16
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: senha
-      POSTGRES_DB: apidb
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
 
-volumes:
-  postgres-data:
-    driver: local
+# postgres:
+#   image: postgres:16
+#   restart: always
+#   environment:
+#     POSTGRES_USER: postgres
+#     POSTGRES_PASSWORD: senha
+#     POSTGRES_DB: apidb
+#   ports:
+#     - "5432:5432"
+#   volumes:
+#     - postgres-data:/var/lib/postgresql/data
+#   healthcheck:
+#     test: ["CMD-SHELL", "pg_isready -U postgres"]
+#     interval: 5s
+#     timeout: 5s
+#     retries: 5
+
+# volumes:
+#   postgres-data:
+#     driver: local
