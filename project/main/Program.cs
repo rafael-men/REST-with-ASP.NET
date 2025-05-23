@@ -45,11 +45,12 @@ builder.Services.AddSingleton(filterOptions);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowFrontend", builder =>
     {
-        builder.AllowAnyOrigin()
+        builder.WithOrigins("https://rest-with-asp-net.vercel.app") 
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+               .AllowCredentials();
     });
 });
 
@@ -151,7 +152,7 @@ app.UseSwaggerUI(c =>
 
 
 app.UseRouting();
-app.UseCors("AllowAll");
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
@@ -165,12 +166,12 @@ public static class DatabaseMigration
     {
         try
         {
-            logger.Information("Iniciando as migrações de banco de dados com Evolve.");
+            logger.Information("Iniciando as migraÃ§Ãµes de banco de dados com Evolve.");
             var connectionString = configuration.GetConnectionString("PostgresqlConnection");
 
             if (string.IsNullOrEmpty(connectionString))
             {
-                logger.Error("A string de conexão 'PostgresqlConnection' não foi configurada.");
+                logger.Error("A string de conexÃ£o 'PostgresqlConnection' nÃ£o foi configurada.");
                 return;
             }
 
@@ -184,12 +185,12 @@ public static class DatabaseMigration
 
                 evolve.Migrate();
 
-                logger.Information("Migrações de banco de dados concluídas com sucesso.");
+                logger.Information("MigraÃ§Ãµes de banco de dados concluÃ­das com sucesso.");
             }
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "Ocorreu um erro durante as migrações de banco de dados.");
+            logger.Error(ex, "Ocorreu um erro durante as migraÃ§Ãµes de banco de dados.");
             throw;
         }
     }
