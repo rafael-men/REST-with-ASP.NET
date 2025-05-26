@@ -65,7 +65,7 @@ export default function Navbar() {
       <div className={cn("md:hidden", isOpen ? "block" : "hidden")}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <Link
-            to="/"
+            to="/main"
             className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-primary"
             onClick={() => setIsOpen(false)}
           >
@@ -73,7 +73,7 @@ export default function Navbar() {
             <span>Início</span>
           </Link>
           <Link
-            to="/books"
+            to="/main"
             className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-primary"
             onClick={() => setIsOpen(false)}
           >
